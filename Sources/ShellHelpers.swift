@@ -32,7 +32,7 @@
 import Foundation
 
 extension String {
-    func shellOutput() -> String? {
+    func shellOutput(cwd: URL? = nil) -> String? {
         let process = Process()
         let pipe = Pipe()
 
@@ -40,6 +40,7 @@ extension String {
         process.arguments = ["-c", self]
         process.standardOutput = pipe
         process.standardError = pipe
+        process.currentDirectoryURL = cwd
 
         let file = pipe.fileHandleForReading
 

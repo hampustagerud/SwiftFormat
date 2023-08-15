@@ -399,6 +399,17 @@ class GeneralTests: RulesTests {
 
     // MARK: - fileHeader
 
+    func testGitHelpersReturnsInfo() {
+        let projectDirectory = URL(fileURLWithPath: #file)
+            .deletingLastPathComponent().deletingLastPathComponent()
+
+        let info = GitHelpers(cwd: projectDirectory)
+            .fileInfo(URL(fileURLWithPath: #file))
+
+        XCTAssertEqual(info?.createdByName, "Nick Lockwood")
+        XCTAssertEqual(info?.createdByEmail, "nick@charcoaldesign.co.uk")
+    }
+
     func testStripHeader() {
         let input = "//\n//  test.swift\n//  SwiftFormat\n//\n//  Created by Nick Lockwood on 08/11/2016.\n//  Copyright © 2016 Nick Lockwood. All rights reserved.\n//\n\n/// func\nfunc foo() {}"
         let output = "/// func\nfunc foo() {}"
