@@ -285,9 +285,21 @@ func collectFileInfo(inputURL: URL, options: Options, resourceValues: URLResourc
 
     let gitInfo = shouldGetGitInfo ? GitFileInfo(url: inputURL) : nil
 
+    let creationDate =
+        if let gitDate = gitInfo?.creationDate {
+            // File has been comitted to git before
+            gitDate
+        } else if let _ = gitInfo {
+            // File is inside a git repo but not comitted before
+            Date()
+        } else {
+            // Not inside a git repo
+            resourceValues.creationDate
+        }
+
     return FileInfo(
         filePath: resourceValues.path,
-        creationDate: gitInfo?.creationDate ?? resourceValues.creationDate,
+        creationDate: creationDate,
         replacements: [
             .author: ReplacementType(gitInfo?.author),
             .authorName: ReplacementType(gitInfo?.authorName),
